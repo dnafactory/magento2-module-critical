@@ -67,7 +67,12 @@ class CriticalCss extends \Magento\Theme\Block\Html\Header\CriticalCss
             $dir = $this->filesystem->getDirectoryRead(DirectoryList::STATIC_VIEW);
             if ($dir->isExist($asset->getPath())) {
                 $content = $dir->readFile($asset->getPath());
-                $content = preg_replace('/(?:\'|\")(\.\.\/)/',$this->assetRepo->getUrl(''), $content);
+                $resUrl = $this->assetRepo->getUrl('');
+                if (substr($resUrl, -1) != "/") {
+                    $resUrl .= "/";
+                }
+
+                $content = preg_replace('/(\'|\")(\.\.\/)/', "$1" . $resUrl, $content);
             }else if($this->appState->getMode() != State::MODE_PRODUCTION){
                 $content = $asset->getContent();
             }
