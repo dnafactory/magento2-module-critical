@@ -75,9 +75,11 @@ class CriticalCss extends \Magento\Theme\Block\Html\Header\CriticalCss
                 $content = preg_replace('/(\'|\")(\.\.\/)/', "$1" . $resUrl, $content);
             }else if($this->appState->getMode() != State::MODE_PRODUCTION){
                 $content = $asset->getContent();
+                $dirWriter = $this->filesystem->getDirectoryWrite(DirectoryList::STATIC_VIEW);
+                $dirWriter->writeFile($asset->getPath(), $content);
             }
         } catch (\Exception $e) {
-            $content = '';
+            $content = $content?? '';
         }
 
         return (isset($content))? $content : '';
